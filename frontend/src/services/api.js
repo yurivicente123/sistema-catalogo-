@@ -7,7 +7,8 @@ const API_BASE_URL = import.meta.env.MODE === 'production'
     : 'http://localhost:3001';
 
 // URL pública do seu bucket 'uploads' no Supabase
-const API_FILE_URL = 'https://srlecnxcpfsmdxvukba.supabase.co/storage/v1/object/public/uploads/';
+// Corrigido para srlecnxecpfsmdxvukba
+const API_FILE_URL = 'https://srlecnxecpfsmdxvukba.supabase.co/storage/v1/object/public/uploads/';
 
 const api = axios.create({
     baseURL: API_BASE_URL
