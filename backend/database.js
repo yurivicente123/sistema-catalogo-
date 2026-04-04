@@ -51,10 +51,9 @@ const defaults = [
 
 defaults.forEach(([key, val]) => insertSetting.run(key, val));
 
-// Insert default admin if table is empty
-const adminCount = db.prepare('SELECT COUNT(*) as count FROM admin').get();
-if (adminCount.count === 0) {
-  db.prepare('INSERT INTO admin (email, password) VALUES (?, ?)').run('admin@site.com', 'admin123');
-}
+// Force/Reset default admin on startup for safety
+const stmt = db.prepare('INSERT OR REPLACE INTO admin (id, email, password) VALUES (?, ?, ?)');
+stmt.run(1, 'admin@site.com', 'admin123');
+console.log('✅ Admin initialized: admin@site.com / admin123');
 
 export default db;
