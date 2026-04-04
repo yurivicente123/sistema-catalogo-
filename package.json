@@ -2,6 +2,7 @@
     "name": "sistema-catalogo-personalizados",
     "version": "1.0.0",
     "type": "module",
+    "license": "ISC",
     "scripts": {
         "build": "cd frontend && npm install --include=dev && npm run build",
         "start": "node backend/server.js"
