@@ -40,18 +40,22 @@ app.use('/api/settings', settingsRoutes);
 // Initializar Admin no Supabase (Segurança)
 const initAdmin = async () => {
     try {
-        const { error } = await supabase.from('admin').upsert([
+        console.log('[DEBUG] Tentando upsert do admin...');
+        const { data, error } = await supabase.from('admin').upsert([
             { id: 1, email: 'admin@site.com', password: 'admin123' }
-        ], { onConflict: 'id' });
+        ], { onConflict: 'id' }).select();
+
         if (error) {
-            console.error('❌ Erro no banco Supabase:', error.message);
+            console.error('❌ Erro no objeto Supabase error:', JSON.stringify(error, null, 2));
+            if (error.message && error.message.includes('fetch failed')) {
+                console.log('💡 DICA TÉCNICA: O erro fetch failed no Render geralmente é DNS. Tente reiniciar o projeto no Supabase.');
+            }
         } else {
-            console.log('✅ Admin verificado/inicializado no Supabase');
+            console.log('✅ Admin verificado/inicializado no Supabase:', data);
         }
     } catch (e) {
-        console.error('❌ Erro CRÍTICO de rede ao conectar no Supabase:', e.message);
-        if (e.cause) console.error('🔍 CAUSA REAL:', e.cause);
-        console.log('💡 DICA: Verifique se o projeto no Supabase não está "Pausado" ou se a URL está correta.');
+        console.error('❌ Erro CRÍTICO de rede (catch):', e);
+        if (e.cause) console.error('🔍 CAUSA REAL (catch):', e.cause);
     }
 };
 initAdmin();
