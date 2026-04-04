@@ -43,10 +43,15 @@ const initAdmin = async () => {
         const { error } = await supabase.from('admin').upsert([
             { id: 1, email: 'admin@site.com', password: 'admin123' }
         ], { onConflict: 'id' });
-        if (error) console.error('Erro ao inicializar admin no Supabase:', error.message);
-        else console.log('✅ Admin verificado/inicializado no Supabase');
+        if (error) {
+            console.error('❌ Erro no banco Supabase:', error.message);
+        } else {
+            console.log('✅ Admin verificado/inicializado no Supabase');
+        }
     } catch (e) {
-        console.error('Erro de conexão ao inicializar:', e.message);
+        console.error('❌ Erro CRÍTICO de rede ao conectar no Supabase:', e.message);
+        if (e.cause) console.error('🔍 CAUSA REAL:', e.cause);
+        console.log('💡 DICA: Verifique se o projeto no Supabase não está "Pausado" ou se a URL está correta.');
     }
 };
 initAdmin();
