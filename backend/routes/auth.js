@@ -4,14 +4,19 @@ import { generateToken } from '../middleware/auth.js';
 
 const router = express.Router();
 
-router.post('/login', (req, res) => {
+router.post('/login', async (req, res) => {
     const { email, password } = req.body;
-    console.log(`[DEBUG] Attempting login: ${email}`);
+    console.log(`[DEBUG] Attempting Supabase login: ${email}`);
 
     try {
-        const admin = db.prepare('SELECT * FROM admin WHERE email = ? AND password = ?').get(email, password);
+        const { data: admin, error } = await db
+            .from('admin')
+            .select('*')
+            .eq('email', email)
+            .eq('password', password)
+            .single();
 
-        if (admin) {
+        if (admin && !error) {
             console.log(`[DEBUG] Login successful for: ${email}`);
             const token = generateToken(admin.id);
             res.json({ token });
@@ -20,8 +25,8 @@ router.post('/login', (req, res) => {
             res.status(401).json({ error: 'Credenciais inválidas' });
         }
     } catch (error) {
-        console.error('[DEBUG] Database error during login:', error);
-        res.status(500).json({ error: 'Erro no servidor' });
+        console.error('[DEBUG] Supabase login error:', error);
+        res.status(401).json({ error: 'Credenciais inválidas' });
     }
 });
 

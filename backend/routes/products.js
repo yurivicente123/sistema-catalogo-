@@ -1,69 +1,89 @@
 import express from 'express';
 import multer from 'multer';
-import path from 'path';
 import { v4 as uuidv4 } from 'uuid';
 import db from '../database.js';
-import { authMiddleware } from '../middleware/auth.js';
 
 const router = express.Router();
+const upload = multer({ storage: multer.memoryStorage() });
 
-// Multer setup for image uploads
-const storage = multer.diskStorage({
-    destination: (req, file, cb) => {
-        cb(null, path.join(process.cwd(), '../uploads'));
-    },
-    filename: (req, file, cb) => {
-        const ext = path.extname(file.originalname);
-        cb(null, `${uuidv4()}${ext}`);
+// Get all products
+router.get('/', async (req, res) => {
+    try {
+        const { data, error } = await db.from('products').select('*');
+        if (error) throw error;
+        res.json(data);
+    } catch (error) {
+        res.status(500).json({ error: error.message });
     }
 });
 
-const upload = multer({ storage });
-
-// Public: Get all products
-router.get('/', (req, res) => {
-    const products = db.prepare('SELECT * FROM products').all();
-    res.json(products);
-});
-
-// Admin: Add product
-router.post('/', authMiddleware, upload.single('imagem'), (req, res) => {
+// Add product
+router.post('/', upload.single('imagem'), async (req, res) => {
     const { nome, preco, categoria } = req.body;
-    const imagePath = req.file ? `/uploads/${req.file.filename}` : '';
-    const id = uuidv4();
+    let imagemUrl = '';
 
-    db.prepare('INSERT INTO products (id, nome, preco, imagem, categoria) VALUES (?, ?, ?, ?, ?)').run(id, nome, preco, imagePath, categoria || 'Geral');
+    try {
+        if (req.file) {
+            const fileExt = req.file.originalname.split('.').pop();
+            const fileName = `${uuidv4()}.${fileExt}`;
+            const { error: uploadError } = await db.storage
+                .from('uploads')
+                .upload(fileName, req.file.buffer, {
+                    contentType: req.file.mimetype,
+                    upsert: true
+                });
 
-    res.json({ id, nome, preco, imagem: imagePath, categoria });
-});
+            if (uploadError) throw uploadError;
+            imagemUrl = fileName;
+        }
 
-// Admin: Update product
-router.put('/:id', authMiddleware, upload.single('imagem'), (req, res) => {
-    const { id } = req.params;
-    const { nome, preco, categoria } = req.body;
+        const { data, error } = await db.from('products').insert([
+            { id: uuidv4(), nome, preco: parseFloat(preco), imagem: imagemUrl, categoria }
+        ]).select();
 
-    let query = 'UPDATE products SET nome = ?, preco = ?, categoria = ?';
-    let params = [nome, preco, categoria || 'Geral'];
-
-    if (req.file) {
-        const imagePath = `/uploads/${req.file.filename}`;
-        query += ', imagem = ?';
-        params.push(imagePath);
+        if (error) throw error;
+        res.json(data[0]);
+    } catch (error) {
+        res.status(500).json({ error: error.message });
     }
-
-    query += ' WHERE id = ?';
-    params.push(id);
-
-    db.prepare(query).run(...params);
-
-    res.json({ success: true });
 });
 
-// Admin: Delete product
-router.delete('/:id', authMiddleware, (req, res) => {
-    const { id } = req.params;
-    db.prepare('DELETE FROM products WHERE id = ?').run(id);
-    res.json({ success: true });
+// Update product
+router.put('/:id', upload.single('imagem'), async (req, res) => {
+    const { nome, preco, categoria } = req.body;
+    const updates = { nome, preco: parseFloat(preco), categoria };
+
+    try {
+        if (req.file) {
+            const fileExt = req.file.originalname.split('.').pop();
+            const fileName = `${uuidv4()}.${fileExt}`;
+            const { error: uploadError } = await db.storage
+                .from('uploads')
+                .upload(fileName, req.file.buffer, {
+                    contentType: req.file.mimetype,
+                    upsert: true
+                });
+
+            if (!uploadError) updates.imagem = fileName;
+        }
+
+        const { data, error } = await db.from('products').update(updates).eq('id', req.params.id).select();
+        if (error) throw error;
+        res.json(data[0]);
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+});
+
+// Delete product
+router.delete('/:id', async (req, res) => {
+    try {
+        const { error } = await db.from('products').delete().eq('id', req.params.id);
+        if (error) throw error;
+        res.json({ message: 'Produto deletado' });
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
 });
 
 export default router;
