@@ -8,16 +8,10 @@ const __dirname = path.dirname(__filename);
 
 dotenv.config({ path: path.join(__dirname, '.env') });
 
-// Prioridade: Environment Variables do Render > .env local > Hardcoded fallback
 const supabaseUrl = (process.env.SUPABASE_URL || 'https://srlecnxcpfsmdxvukba.supabase.co').trim().replace(/\/$/, '');
 const supabaseKey = (process.env.SUPABASE_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNybGVjbnhlY3Bmc21keHZ1a2JhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzUzMjEyMjIsImV4cCI6MjA5MDg5NzIyMn0.m4ss87x_Kdi8KgCYReNcevjOs0kLXb-X__Dq5jh63xI').trim();
 
-console.log(`[INIT] Tentando conectar ao Supabase URL: ${supabaseUrl}`);
-if (!supabaseKey) {
-    console.error('[INIT] ❌ ERRO: SUPABASE_KEY não encontrada!');
-} else {
-    console.log(`[INIT] ✅ SUPABASE_KEY detectada (comprimento: ${supabaseKey.length} caracteres)`);
-}
+console.log(`[INIT] Conectando ao Supabase em: ${supabaseUrl}`);
 
 const supabase = createClient(supabaseUrl, supabaseKey, {
     auth: {
