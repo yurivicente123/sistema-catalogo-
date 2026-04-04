@@ -11,7 +11,7 @@ const AdminLogin = () => {
     const handleLogin = async (e) => {
         e.preventDefault();
         try {
-            const res = await login(email, password);
+            const res = await login({ email, password });
             localStorage.setItem('token', res.data.token);
             navigate('/admin');
         } catch (err) {
