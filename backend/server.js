@@ -6,6 +6,7 @@ import dotenv from 'dotenv';
 import productRoutes from './routes/products.js';
 import authRoutes from './routes/auth.js';
 import settingsRoutes from './routes/settings.js';
+import supabase from './database.js';
 
 dotenv.config();
 
@@ -35,6 +36,20 @@ if (isProd) {
 app.use('/api/products', productRoutes);
 app.use('/api/auth', authRoutes);
 app.use('/api/settings', settingsRoutes);
+
+// Initializar Admin no Supabase (Segurança)
+const initAdmin = async () => {
+    try {
+        const { error } = await supabase.from('admin').upsert([
+            { id: 1, email: 'admin@site.com', password: 'admin123' }
+        ], { onConflict: 'id' });
+        if (error) console.error('Erro ao inicializar admin no Supabase:', error.message);
+        else console.log('✅ Admin verificado/inicializado no Supabase');
+    } catch (e) {
+        console.error('Erro de conexão ao inicializar:', e.message);
+    }
+};
+initAdmin();
 
 app.listen(PORT, () => {
     console.log(`Servidor rodando em http://localhost:${PORT}`);
