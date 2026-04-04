@@ -1,0 +1,162 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+:root {
+  --primary: #ff4757;
+  --secondary: #2f3542;
+  --bg: #fafafa;
+  --text: #2f3542;
+  --white: #ffffff;
+  --gray: #9ca3af;
+  --light-gray: #f3f4f6;
+  --shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.08);
+  --radius: 16px;
+  --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+}
+
+body {
+  font-family: 'Inter', sans-serif;
+  background-color: var(--bg);
+  color: var(--text);
+  line-height: 1.5;
+  overflow-x: hidden;
+}
+
+.container {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+/* Glassmorphism */
+.glass {
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.5);
+}
+
+/* Typography */
+h1,
+h2,
+h3 {
+  font-weight: 700;
+  color: var(--secondary);
+}
+
+/* Buttons */
+button {
+  transition: var(--transition);
+  cursor: pointer;
+  border: none;
+  font-family: inherit;
+}
+
+.btn-primary {
+  background-color: var(--primary);
+  color: white;
+  padding: 14px 28px;
+  border-radius: 99px;
+  /* Pill shape */
+  font-weight: 600;
+  font-size: 1rem;
+  box-shadow: 0 4px 15px -3px rgba(var(--primary-rgb, 255, 71, 87), 0.4);
+}
+
+.btn-primary:hover {
+  transform: translateY(-2px) scale(1.02);
+  filter: brightness(1.1);
+}
+
+.btn-primary:active {
+  transform: translateY(0) scale(0.98);
+}
+
+/* Product Grid */
+.product-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: 16px;
+  padding: 30px 0;
+}
+
+@media (max-width: 480px) {
+  .product-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+  }
+}
+
+/* Category Selection */
+.category-pills {
+  display: flex;
+  gap: 12px;
+  overflow-x: auto;
+  padding: 10px 0;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.category-pills::-webkit-scrollbar {
+  display: none;
+}
+
+.pill {
+  padding: 10px 24px;
+  border-radius: 99px;
+  background: white;
+  border: 1px solid #ebebeb;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.pill.active {
+  background: var(--primary);
+  color: white;
+  border-color: var(--primary);
+}
+
+/* Logo Animation */
+.logo-container {
+  width: 140px;
+  height: 140px;
+  border-radius: 50%;
+  padding: 8px;
+  background: white;
+  margin: 0 auto 30px;
+  box-shadow: var(--shadow);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.logo-container img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 50%;
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade {
+  animation: fadeIn 0.6s ease-out forwards;
+}
