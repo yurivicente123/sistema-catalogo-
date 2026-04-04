@@ -20,11 +20,14 @@ app.use(express.json());
 app.use('/uploads', express.static(path.join(__dirname, '../uploads')));
 
 // Serve frontend static files in production
-if (process.env.NODE_ENV === 'production') {
-    app.use(express.static(path.join(__dirname, '../frontend/dist')));
+const isProd = process.env.NODE_ENV === 'production' || process.env.RAILWAY_ENVIRONMENT;
+
+if (isProd) {
+    const distPath = path.join(__dirname, '../frontend/dist');
+    app.use(express.static(distPath));
     app.get('*', (req, res, next) => {
         if (req.path.startsWith('/api') || req.path.startsWith('/uploads')) return next();
-        res.sendFile(path.resolve(__dirname, '../frontend/dist/index.html'));
+        res.sendFile(path.resolve(distPath, 'index.html'));
     });
 }
 
