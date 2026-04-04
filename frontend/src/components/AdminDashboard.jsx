@@ -55,20 +55,20 @@ const AdminDashboard = ({ settings, setSettings }) => {
     };
 
     return (
-        <div style={{ display: 'flex', minHeight: '100vh' }}>
-            <aside style={{ width: '250px', background: 'var(--secondary)', color: 'white', padding: '2rem' }}>
+        <div className="admin-layout">
+            <aside className="admin-sidebar">
                 <h2 style={{ marginBottom: '2rem' }}>Admin</h2>
                 <nav style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-                    <button style={{ background: 'none', color: 'white', display: 'flex', alignItems: 'center', gap: '0.5rem', textAlign: 'left', fontWeight: 'bold' }}>
-                        <ShoppingBag size={20} /> Painel Geral
+                    <button style={{ background: 'none', color: 'white', border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '0.5rem', textAlign: 'left', fontWeight: 'bold' }}>
+                        <ShoppingBag size={20} /> <span>Painel</span>
                     </button>
-                    <button onClick={handleLogout} style={{ background: 'none', color: '#ff4757', display: 'flex', alignItems: 'center', gap: '0.5rem', marginTop: 'auto', padding: '2rem 0' }}>
-                        <LogOut size={20} /> Sair
+                    <button onClick={handleLogout} style={{ background: 'none', color: '#ff4757', border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '0.5rem', marginTop: 'auto' }}>
+                        <LogOut size={20} /> <span>Sair</span>
                     </button>
                 </nav>
             </aside>
 
-            <main style={{ flex: 1, padding: '2rem', background: '#f5f5f5', overflowY: 'auto' }}>
+            <main className="admin-main">
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2rem' }}>
                     <h1>Configurações do Sistema</h1>
                     <button className="btn-primary" onClick={() => { setEditingProduct(null); setIsFormOpen(true); }} style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
@@ -146,7 +146,9 @@ const AdminDashboard = ({ settings, setSettings }) => {
 
                 <section className="glass" style={{ padding: '2rem', borderRadius: 'var(--radius)' }}>
                     <h2 style={{ marginBottom: '1.5rem' }}>Produtos Cadastrados</h2>
-                    <table style={{ width: '100%', background: 'white', borderCollapse: 'collapse', borderRadius: 'var(--radius)', overflow: 'hidden' }}>
+
+                    {/* Desktop View Table */}
+                    <table className="admin-table" style={{ width: '100%', background: 'white', borderCollapse: 'collapse', borderRadius: 'var(--radius)', overflow: 'hidden' }}>
                         <thead>
                             <tr style={{ background: '#eee', textAlign: 'left' }}>
                                 <th style={{ padding: '1rem' }}>Imagem</th>
@@ -167,13 +169,31 @@ const AdminDashboard = ({ settings, setSettings }) => {
                                     </td>
                                     <td style={{ padding: '1rem', fontWeight: 600 }}>R$ {p.preco.toFixed(2)}</td>
                                     <td style={{ padding: '1rem', display: 'flex', gap: '0.8rem' }}>
-                                        <button onClick={() => { setEditingProduct(p); setIsFormOpen(true); }} style={{ color: 'var(--secondary)' }}><Edit size={20} /></button>
-                                        <button onClick={() => handleDelete(p.id)} style={{ color: '#ff4757' }}><Trash size={20} /></button>
+                                        <button onClick={() => { setEditingProduct(p); setIsFormOpen(true); }} style={{ color: 'var(--secondary)', background: 'none', border: 'none', cursor: 'pointer' }}><Edit size={20} /></button>
+                                        <button onClick={() => handleDelete(p.id)} style={{ color: '#ff4757', background: 'none', border: 'none', cursor: 'pointer' }}><Trash size={20} /></button>
                                     </td>
                                 </tr>
                             ))}
                         </tbody>
                     </table>
+
+                    {/* Mobile View Cards */}
+                    <div className="admin-cards">
+                        {products.map(p => (
+                            <div key={p.id} className="admin-card">
+                                <img src={`${API_FILE_URL}${p.imagem}`} alt="" style={{ width: '60px', height: '60px', objectFit: 'cover', borderRadius: '8px' }} />
+                                <div style={{ flex: 1 }}>
+                                    <div style={{ fontWeight: 'bold' }}>{p.nome}</div>
+                                    <div style={{ fontSize: '0.8rem', color: 'var(--gray)' }}>{p.categoria}</div>
+                                    <div style={{ color: 'var(--primary)', fontWeight: 'bold' }}>R$ {p.preco.toFixed(2)}</div>
+                                </div>
+                                <div style={{ display: 'flex', gap: '10px' }}>
+                                    <button onClick={() => { setEditingProduct(p); setIsFormOpen(true); }} style={{ color: 'var(--secondary)', background: 'none', border: 'none' }}><Edit size={20} /></button>
+                                    <button onClick={() => handleDelete(p.id)} style={{ color: '#ff4757', background: 'none', border: 'none' }}><Trash size={20} /></button>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
                 </section>
 
                 {isFormOpen && (

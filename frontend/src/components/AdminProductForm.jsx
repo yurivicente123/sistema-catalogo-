@@ -38,11 +38,11 @@ const AdminProductForm = ({ product, onClose, onSuccess }) => {
     };
 
     return (
-        <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.6)', backdropFilter: 'blur(4px)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1100 }}>
-            <form onSubmit={handleSubmit} className="glass" style={{ padding: '2.5rem', borderRadius: '20px', width: '100%', maxWidth: '550px', maxHeight: '90vh', overflowY: 'auto' }}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '2rem' }}>
-                    <h2 style={{ fontSize: '1.8rem' }}>{product ? 'Editar Produto' : 'Novo Produto'}</h2>
-                    <button type="button" onClick={onClose} style={{ background: '#eee', borderRadius: '50%', padding: '5px' }}><X size={24} /></button>
+        <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.6)', backdropFilter: 'blur(4px)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1100, padding: '1rem' }}>
+            <form onSubmit={handleSubmit} className="glass" style={{ background: 'white', padding: '1.5rem', borderRadius: '20px', width: '100%', maxWidth: '550px', maxHeight: '95vh', overflowY: 'auto', position: 'relative' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '1.5rem', alignItems: 'center' }}>
+                    <h2 style={{ fontSize: '1.4rem' }}>{product ? 'Editar Produto' : 'Novo Produto'}</h2>
+                    <button type="button" onClick={onClose} style={{ background: '#eee', borderRadius: '50%', width: '32px', height: '32px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}><X size={20} /></button>
                 </div>
 
                 <div style={{ marginBottom: '1.2rem' }}>
@@ -50,14 +50,14 @@ const AdminProductForm = ({ product, onClose, onSuccess }) => {
                     <input type="text" value={nome} onChange={e => setNome(e.target.value)} style={{ width: '100%', padding: '12px', borderRadius: '10px', border: '1px solid #ddd' }} placeholder="Ex: Caneca de Porcelana" required />
                 </div>
 
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem', marginBottom: '1.2rem' }}>
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '1rem', marginBottom: '1.2rem' }}>
                     <div>
-                        <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 600 }}>Preço (R$)</label>
-                        <input type="number" step="0.01" value={preco} onChange={e => setPreco(e.target.value)} style={{ width: '100%', padding: '12px', borderRadius: '10px', border: '1px solid #ddd' }} placeholder="0.00" required />
+                        <label style={{ display: 'block', marginBottom: '0.4rem', fontWeight: 600, fontSize: '0.9rem' }}>Preço (R$)</label>
+                        <input type="number" step="0.01" value={preco} onChange={e => setPreco(e.target.value)} style={{ width: '100%', padding: '10px', borderRadius: '10px', border: '1px solid #ddd' }} placeholder="0.00" required />
                     </div>
                     <div>
-                        <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 600 }}>Categoria</label>
-                        <input type="text" value={categoria} onChange={e => setCategoria(e.target.value)} style={{ width: '100%', padding: '12px', borderRadius: '10px', border: '1px solid #ddd' }} placeholder="Ex: Canecas" required />
+                        <label style={{ display: 'block', marginBottom: '0.4rem', fontWeight: 600, fontSize: '0.9rem' }}>Categoria</label>
+                        <input type="text" value={categoria} onChange={e => setCategoria(e.target.value)} style={{ width: '100%', padding: '10px', borderRadius: '10px', border: '1px solid #ddd' }} placeholder="Ex: Canecas" required />
                     </div>
                 </div>
 
