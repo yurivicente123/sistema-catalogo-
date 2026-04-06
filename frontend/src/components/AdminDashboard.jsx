@@ -137,6 +137,9 @@ const AdminDashboard = ({ settings, setSettings }) => {
                                 <Upload size={18} /> {logoFile ? logoFile.name : 'Alterar Logo'}
                             </label>
                         </div>
+                        <p style={{ fontSize: '0.8rem', color: 'var(--gray)', marginTop: '0.8rem' }}>
+                            💡 **Dica de Velocidade**: Tente subir fotos de até 500kb para que o seu catálogo carregue instantaneamente em qualquer celular!
+                        </p>
                     </div>
 
                     <button className="btn-primary" style={{ marginTop: '2rem', padding: '15px 40px' }} onClick={handleSaveSettings}>

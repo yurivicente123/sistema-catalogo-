@@ -19,7 +19,13 @@ const ProductCard = ({ product }) => {
             }}>
                 <img src={imageUrl || 'https://via.placeholder.com/300x300?text=Produto'}
                     alt={product.nome}
-                    style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                    loading="lazy"
+                    style={{
+                        width: '100%',
+                        height: '100%',
+                        objectFit: 'cover',
+                        transition: 'opacity 0.3s ease-in'
+                    }} />
             </div>
 
             <div style={{ textAlign: 'center', padding: '0 5px' }}>
