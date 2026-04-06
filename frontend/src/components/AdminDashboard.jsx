@@ -92,6 +92,10 @@ const AdminDashboard = ({ settings, setSettings }) => {
                             <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 600 }}>E-mail de Contato</label>
                             <input type="email" value={settings.storeEmail || ''} onChange={e => setSettings({ ...settings, storeEmail: e.target.value })} style={{ width: '100%', padding: '10px', borderRadius: '8px', border: '1px solid #ddd' }} />
                         </div>
+                        <div>
+                            <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 600 }}>Instagram (Link ou @)</label>
+                            <input type="text" value={settings.instagram || ''} onChange={e => setSettings({ ...settings, instagram: e.target.value })} placeholder="Ex: @seuluxo" style={{ width: '100%', padding: '10px', borderRadius: '8px', border: '1px solid #ddd' }} />
+                        </div>
                     </div>
 
                     <div style={{ marginTop: '1.5rem' }}>

@@ -13,39 +13,37 @@ const CartModal = ({ isOpen, onClose, settings }) => {
         const storeName = (settings.themeName || 'SUBLIME STORE').toUpperCase();
         const storeAddress = settings.storeAddress || 'ENDEREÇO NÃO CONFIGURADO';
         const storeContact = settings.storeContact || whatsappNumber;
+        const storeInstagram = settings.instagram || '';
         const storeEmail = settings.storeEmail || 'contato@loja.com';
 
         const now = new Date();
         const dateStr = now.toLocaleDateString('pt-BR');
         const timeStr = now.toLocaleTimeString('pt-BR');
 
-        let message = `*${storeName}*\n\n`;
-        message += `${storeAddress.toUpperCase()}\n\n`;
-        message += `Telefone: ${storeContact}\n`;
-        message += `E-mail: ${storeEmail}\n\n`;
-        message += `Cliente: .\n\n`;
-        message += `*RECIBO DE PRODUTOS/SERVIÇOS*\n`;
-        message += `${dateStr} / ${timeStr}\n\n`;
-        message += `----------------------------\n`;
-        message += `*PRODUTOS*\n`;
-        message += `----------------------------\n`;
+        let message = `🛒 *${storeName}* 🛍️\n`;
+        message += `━━━━━━━━━━━━━━━━━\n`;
+        if (storeAddress) message += `📍 ${storeAddress.toUpperCase()}\n`;
+        message += `📱 Contato: ${storeContact}\n`;
+        if (storeInstagram) message += `📸 Instagram: ${storeInstagram}\n`;
+        else if (storeEmail) message += `📧 E-mail: ${storeEmail}\n`;
+
+        message += `━━━━━━━━━━━━━━━━━\n\n`;
+        message += `*📝 RECIBO DE PEDIDO*\n`;
+        message += `📅 Data: ${dateStr} às ${timeStr}\n\n`;
+        message += `*📦 PRODUTOS*\n`;
+        message += `━━━━━━━━━━━━━━━━━\n`;
 
         cart.forEach(item => {
             const itemTotal = (item.preco * item.quantity).toFixed(2).replace('.', ',');
-            message += `${item.nome.toUpperCase()}\n`;
-            message += `QTD: ${item.quantity.toFixed(1)}  x  R$ ${item.preco.toFixed(2).replace('.', ',')}  =  R$ ${itemTotal}\n`;
-            message += `----------------------------\n`;
+            message += `🔹 *${item.nome.toUpperCase()}*\n`;
+            message += `   ${item.quantity.toFixed(1)} x R$ ${item.preco.toFixed(2).replace('.', ',')} = *R$ ${itemTotal}*\n`;
         });
 
-        message += `*TOTAL DOS PRODUTOS = R$ ${total.toFixed(2).replace('.', ',')}*\n`;
-        message += `----------------------------\n\n`;
-        message += `----------------------------\n`;
-        message += `*TOTAL GERAL = R$ ${total.toFixed(2).replace('.', ',')}*\n`;
-        message += `DESCONTOS = R$ 0,00\n`;
-        message += `*TOTAL (GERAL - DESCONTOS) = R$ ${total.toFixed(2).replace('.', ',')}*\n`;
-        message += `VALOR PAGO = R$ 0,00\n`;
-        message += `RESTANTE A PAGAR = R$ ${total.toFixed(2).replace('.', ',')}\n\n`;
-        message += `Obrigado`;
+        message += `━━━━━━━━━━━━━━━━━\n`;
+        message += `💰 *TOTAL GERAL: R$ ${total.toFixed(2).replace('.', ',')}*\n`;
+        message += `━━━━━━━━━━━━━━━━━\n\n`;
+        message += `🚀 *Aguardamos o seu pagamento!*\n`;
+        message += `Muito obrigado pela preferência!✨`;
 
         const encodedMessage = encodeURIComponent(message);
         window.open(`https://wa.me/${whatsappNumber}?text=${encodedMessage}`, '_blank');
