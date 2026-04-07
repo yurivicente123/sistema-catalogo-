@@ -29,10 +29,8 @@ const ProductCard = ({ product }) => {
             </div>
 
             <div style={{ textAlign: 'center', padding: '0 5px' }}>
-                <h4 style={{
+                <h4 className="font-product-name" style={{
                     fontSize: '0.75rem',
-                    fontWeight: 700,
-                    textTransform: 'uppercase',
                     color: 'var(--secondary)',
                     marginBottom: '2px',
                     letterSpacing: '0.3px',
@@ -40,11 +38,12 @@ const ProductCard = ({ product }) => {
                     WebkitLineClamp: 2,
                     WebkitBoxOrient: 'vertical',
                     overflow: 'hidden',
-                    height: '2.2em'
+                    height: '2.2em',
+                    textTransform: 'uppercase'
                 }}>
                     {product.nome}
                 </h4>
-                <p style={{ fontWeight: 800, fontSize: '1rem', color: 'var(--secondary)', marginBottom: '10px' }}>
+                <p className="font-product-price" style={{ fontSize: '1rem', color: 'var(--secondary)', marginBottom: '10px' }}>
                     R$ {parseFloat(product.preco).toFixed(2).replace('.', ',')}
                 </p>
 

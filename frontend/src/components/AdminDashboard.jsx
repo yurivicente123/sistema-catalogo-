@@ -125,7 +125,7 @@ const AdminDashboard = ({ settings, setSettings }) => {
 
                     <div style={{ marginTop: '1.5rem', borderTop: '1px solid #eee', paddingTop: '1.5rem' }}>
                         <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 600 }}>Logo da Loja</label>
-                        <div style={{ display: 'flex', alignItems: 'center', gap: '20px' }}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '20px', flexWrap: 'wrap' }}>
                             {settings.siteLogo && (
                                 <img src={`${API_FILE_URL}${settings.siteLogo}`} alt="Current Logo" style={{ width: '80px', height: '80px', borderRadius: '50%', objectFit: 'cover', border: '2px solid var(--primary)' }} />
                             )}
@@ -136,14 +136,73 @@ const AdminDashboard = ({ settings, setSettings }) => {
                             }}>
                                 <Upload size={18} /> {logoFile ? logoFile.name : 'Alterar Logo'}
                             </label>
+
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginLeft: 'auto' }}>
+                                <span style={{ fontWeight: 600 }}>Alinhamento:</span>
+                                <button onClick={() => setSettings({ ...settings, logoAlignment: 'flex-start' })} style={{ padding: '8px 15px', borderRadius: '8px', border: '1px solid #ddd', background: settings.logoAlignment === 'flex-start' ? 'var(--primary)' : 'white', color: settings.logoAlignment === 'flex-start' ? 'white' : 'black' }}>Esquerda</button>
+                                <button onClick={() => setSettings({ ...settings, logoAlignment: 'center' })} style={{ padding: '8px 15px', borderRadius: '8px', border: '1px solid #ddd', background: settings.logoAlignment === 'center' ? 'var(--primary)' : 'white', color: settings.logoAlignment === 'center' ? 'white' : 'black' }}>Centro</button>
+                            </div>
                         </div>
                         <p style={{ fontSize: '0.8rem', color: 'var(--gray)', marginTop: '0.8rem' }}>
                             💡 **Dica de Velocidade**: Tente subir fotos de até 500kb para que o seu catálogo carregue instantaneamente em qualquer celular!
                         </p>
                     </div>
 
-                    <button className="btn-primary" style={{ marginTop: '2rem', padding: '15px 40px' }} onClick={handleSaveSettings}>
-                        Salvar Configurações
+                    <h2 style={{ marginTop: '2.5rem', marginBottom: '1.5rem' }}>Personalização de Fontes e Cores</h2>
+
+                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '2rem' }}>
+                        {[
+                            { id: 'storeName', label: 'Nome da Loja (Navbar)' },
+                            { id: 'heroTitle', label: 'Título do Banner (Pequeno)' },
+                            { id: 'heroSubtitle', label: 'Subtítulo do Banner (Grande)' },
+                            { id: 'productName', label: 'Nome dos Produtos' },
+                            { id: 'productPrice', label: 'Preço dos Produtos' }
+                        ].map(part => (
+                            <div key={part.id} className="glass" style={{ padding: '1.5rem', borderRadius: '12px', border: '1px solid #eee' }}>
+                                <h4 style={{ marginBottom: '1rem', color: 'var(--primary)' }}>{part.label}</h4>
+
+                                <div style={{ marginBottom: '1rem' }}>
+                                    <label style={{ display: 'block', fontSize: '0.85rem', marginBottom: '4px' }}>Fonte</label>
+                                    <select
+                                        value={settings[`font_${part.id}`] || 'Inter'}
+                                        onChange={e => setSettings({ ...settings, [`font_${part.id}`]: e.target.value })}
+                                        style={{ width: '100%', padding: '8px', borderRadius: '6px', border: '1px solid #ddd', fontFamily: e => e.target.value }}
+                                    >
+                                        {['Inter', 'Roboto', 'Montserrat', 'Playfair Display', 'Dancing Script', 'Pacifico', 'Outfit', 'Quicksand'].map(f => (
+                                            <option key={f} value={f} style={{ fontFamily: f }}>{f}</option>
+                                        ))}
+                                    </select>
+                                </div>
+
+                                <div style={{ display: 'flex', gap: '10px', marginBottom: '1rem' }}>
+                                    <div style={{ flex: 1 }}>
+                                        <label style={{ display: 'block', fontSize: '0.85rem', marginBottom: '4px' }}>Peso</label>
+                                        <select
+                                            value={settings[`weight_${part.id}`] || 'normal'}
+                                            onChange={e => setSettings({ ...settings, [`weight_${part.id}`]: e.target.value })}
+                                            style={{ width: '100%', padding: '8px', borderRadius: '6px', border: '1px solid #ddd' }}
+                                        >
+                                            <option value="light">Fino</option>
+                                            <option value="normal">Normal</option>
+                                            <option value="bold">Negrito</option>
+                                        </select>
+                                    </div>
+                                    <div style={{ width: '80px' }}>
+                                        <label style={{ display: 'block', fontSize: '0.85rem', marginBottom: '4px' }}>Cor</label>
+                                        <input
+                                            type="color"
+                                            value={settings[`color_${part.id}`] || (part.id.includes('Price') ? '#ff4757' : '#2f3542')}
+                                            onChange={e => setSettings({ ...settings, [`color_${part.id}`]: e.target.value })}
+                                            style={{ width: '100%', height: '35px', border: 'none', borderRadius: '6px' }}
+                                        />
+                                    </div>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+
+                    <button className="btn-primary" style={{ marginTop: '2rem', padding: '15px 60px', fontSize: '1.1rem', boxShadow: '0 4px 12px rgba(255, 71, 87, 0.3)' }} onClick={handleSaveSettings}>
+                        Salvar Todas as Configurações
                     </button>
                 </section>
 

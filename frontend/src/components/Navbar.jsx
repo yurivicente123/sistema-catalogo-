@@ -24,7 +24,7 @@ const Navbar = ({ onCartClick, settings }) => {
                     )}
                 </div>
 
-                <div style={{ fontWeight: 800, fontSize: '1.2rem', color: 'var(--secondary)', letterSpacing: '-0.5px' }}>
+                <div className="font-store-name" style={{ fontSize: '1.2rem', color: 'var(--secondary)', letterSpacing: '-0.5px' }}>
                     {isAdmin ? 'Área Administrativa' : (settings.themeName || 'Personalize')}
                 </div>
 
