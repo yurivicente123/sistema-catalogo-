@@ -143,39 +143,40 @@ function App() {
         const getWeight = (w) => w === 'bold' ? '700' : w === 'light' ? '300' : '400';
 
         return `
-            @import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;700&family=Inter:wght@300;400;700&family=Montserrat:wght@300;400;700&family=Outfit:wght@300;400;700&family=Pacifico&family=Playfair+Display:wght@400;700&family=Quicksand:wght@300;400;700&family=Roboto:wght@300;400;700&display=swap');
-
             .font-store-name { 
-                font-family: '${settings.font_storeName || 'Inter'}', sans-serif;
-                color: ${settings.color_storeName || 'var(--secondary)'};
-                font-weight: ${getWeight(settings.weight_storeName)};
+                font-family: '${settings.font_storeName || 'Inter'}', sans-serif !important;
+                color: ${settings.color_storeName || 'var(--secondary)'} !important;
+                font-weight: ${getWeight(settings.weight_storeName)} !important;
             }
             .font-hero-title { 
-                font-family: '${settings.font_heroTitle || 'Inter'}', sans-serif;
-                color: ${settings.color_heroTitle || 'var(--gray)'};
-                font-weight: ${getWeight(settings.weight_heroTitle)};
+                font-family: '${settings.font_heroTitle || 'Inter'}', sans-serif !important;
+                color: ${settings.color_heroTitle || 'var(--gray)'} !important;
+                font-weight: ${getWeight(settings.weight_heroTitle)} !important;
             }
             .font-hero-subtitle { 
-                font-family: '${settings.font_heroSubtitle || 'Inter'}', sans-serif;
-                color: ${settings.color_heroSubtitle || 'var(--secondary)'};
-                font-weight: ${getWeight(settings.weight_heroSubtitle)};
+                font-family: '${settings.font_heroSubtitle || 'Inter'}', sans-serif !important;
+                color: ${settings.color_heroSubtitle || 'var(--secondary)'} !important;
+                font-weight: ${getWeight(settings.weight_heroSubtitle)} !important;
             }
             .font-product-name { 
-                font-family: '${settings.font_productName || 'Inter'}', sans-serif;
-                color: ${settings.color_productName || 'var(--secondary)'};
-                font-weight: ${getWeight(settings.weight_productName)};
+                font-family: '${settings.font_productName || 'Inter'}', sans-serif !important;
+                color: ${settings.color_productName || 'var(--secondary)'} !important;
+                font-weight: ${getWeight(settings.weight_productName)} !important;
             }
             .font-product-price { 
-                font-family: '${settings.font_productPrice || 'Inter'}', sans-serif;
-                color: ${settings.color_productPrice || 'var(--primary)'};
-                font-weight: ${getWeight(settings.weight_productPrice)};
+                font-family: '${settings.font_productPrice || 'Inter'}', sans-serif !important;
+                color: ${settings.color_productPrice || 'var(--primary)'} !important;
+                font-weight: ${getWeight(settings.weight_productPrice)} !important;
             }
         `;
     };
 
     return (
         <Router>
-            <style>{generateStyles()}</style>
+            <style>
+                @import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;700&family=Inter:wght@300;400;700&family=Montserrat:wght@300;400;700&family=Outfit:wght@300;400;700&family=Pacifico&family=Playfair+Display:wght@400;700&family=Quicksand:wght@300;400;700&family=Roboto:wght@300;400;700&display=swap');
+                {generateStyles()}
+            </style>
             <CartProvider>
                 <Routes>
                     <Route path="/" element={<HomePage settings={settings} />} />

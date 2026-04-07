@@ -143,6 +143,25 @@ const AdminDashboard = ({ settings, setSettings }) => {
                                 <button onClick={() => setSettings({ ...settings, logoAlignment: 'center' })} style={{ padding: '8px 15px', borderRadius: '8px', border: '1px solid #ddd', background: settings.logoAlignment === 'center' ? 'var(--primary)' : 'white', color: settings.logoAlignment === 'center' ? 'white' : 'black' }}>Centro</button>
                             </div>
                         </div>
+
+                        <div style={{ marginTop: '1.5rem', background: '#f9f9f9', padding: '1.5rem', borderRadius: '12px' }}>
+                            <h4 style={{ marginBottom: '1rem' }}>Ajustar Enquadramento da Logo</h4>
+                            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '1.5rem' }}>
+                                <div>
+                                    <label style={{ display: 'block', fontSize: '0.85rem', marginBottom: '8px' }}>Posição Vertical (Cima/Baixo)</label>
+                                    <input type="range" min="0" max="100" value={settings.logoPosY || 50} onChange={e => setSettings({ ...settings, logoPosY: e.target.value })} style={{ width: '100%' }} />
+                                </div>
+                                <div>
+                                    <label style={{ display: 'block', fontSize: '0.85rem', marginBottom: '8px' }}>Posição Horizontal (Esq/Dir)</label>
+                                    <input type="range" min="0" max="100" value={settings.logoPosX || 50} onChange={e => setSettings({ ...settings, logoPosX: e.target.value })} style={{ width: '100%' }} />
+                                </div>
+                                <div>
+                                    <label style={{ display: 'block', fontSize: '0.85rem', marginBottom: '8px' }}>Aumentar/Diminuir Zoom</label>
+                                    <input type="range" min="100" max="300" value={settings.logoZoom || 100} onChange={e => setSettings({ ...settings, logoZoom: e.target.value })} style={{ width: '100%' }} />
+                                </div>
+                            </div>
+                        </div>
+
                         <p style={{ fontSize: '0.8rem', color: 'var(--gray)', marginTop: '0.8rem' }}>
                             💡 **Dica de Velocidade**: Tente subir fotos de até 500kb para que o seu catálogo carregue instantaneamente em qualquer celular!
                         </p>
