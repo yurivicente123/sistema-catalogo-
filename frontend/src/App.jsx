@@ -57,7 +57,16 @@ const HomePage = ({ settings }) => {
                     }}>
                         <div style={{ width: '80px', height: '80px', borderRadius: '50%', overflow: 'hidden' }}>
                             {settings.siteLogo ? (
-                                <img src={`${API_FILE_URL}${settings.siteLogo}`} alt="Logo" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                                <img src={`${API_FILE_URL}${settings.siteLogo}`}
+                                    alt="Logo"
+                                    style={{
+                                        width: '100%',
+                                        height: '100%',
+                                        objectFit: 'cover',
+                                        objectPosition: `${settings.logoPosX || 50}% ${settings.logoPosY || 50}%`,
+                                        transform: `scale(${(settings.logoZoom || 100) / 100})`
+                                    }}
+                                />
                             ) : (
                                 <div style={{ background: 'var(--primary)', width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white', fontSize: '2rem', fontWeight: 800 }}>P</div>
                             )}
