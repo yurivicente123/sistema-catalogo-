@@ -7,7 +7,12 @@ const ProductCard = ({ product }) => {
     const imageUrl = product.imagem.startsWith('http') ? product.imagem : `${API_FILE_URL}${product.imagem}`;
 
     return (
-        <div className="animate-fade" style={{ background: 'transparent' }}>
+        <div className="animate-fade" style={{ 
+            background: 'transparent', 
+            display: 'flex', 
+            flexDirection: 'column',
+            height: '100%' 
+        }}>
             <div style={{
                 position: 'relative',
                 borderRadius: '0', 
@@ -29,7 +34,13 @@ const ProductCard = ({ product }) => {
                     }} />
             </div>
 
-            <div style={{ textAlign: 'center', padding: '0 5px' }}>
+            <div style={{ 
+                flex: 1, 
+                display: 'flex', 
+                flexDirection: 'column', 
+                textAlign: 'left', 
+                padding: '0 5px' 
+            }}>
                 <h4 className="font-product-name" style={{
                     fontSize: '0.85rem',
                     color: 'var(--secondary)',
@@ -37,12 +48,16 @@ const ProductCard = ({ product }) => {
                     letterSpacing: '0.3px',
                     fontWeight: 700,
                     textTransform: 'uppercase',
-                    textAlign: 'left'
+                    minHeight: '2.5rem', /* Ensure space for 2 lines */
+                    display: '-webkit-box',
+                    WebkitLineClamp: 2,
+                    WebkitBoxOrient: 'vertical',
+                    overflow: 'hidden'
                 }}>
                     {product.nome}
                 </h4>
                 
-                <div style={{ textAlign: 'left', marginBottom: '12px' }}>
+                <div style={{ marginBottom: '12px' }}>
                     <p className="font-product-price" style={{ fontSize: '1.2rem', color: 'var(--primary)', fontWeight: 800, marginBottom: '2px' }}>
                         R$ {parseFloat(product.preco).toFixed(2).replace('.', ',')}
                     </p>
@@ -57,7 +72,6 @@ const ProductCard = ({ product }) => {
                     <p style={{ 
                         fontSize: '0.8rem', 
                         color: '#666', 
-                        textAlign: 'left', 
                         marginBottom: '10px',
                         display: '-webkit-box',
                         WebkitLineClamp: 2,
@@ -70,14 +84,19 @@ const ProductCard = ({ product }) => {
                 )}
 
                 {product.prazo_entrega && (
-                    <p style={{ fontSize: '0.75rem', color: '#d35400', fontWeight: 700, textAlign: 'left', marginBottom: '15px' }}>
+                    <p style={{ fontSize: '0.75rem', color: '#d35400', fontWeight: 700, marginBottom: '15px' }}>
                         ⏱️ Pronto em até {product.prazo_entrega}
                     </p>
                 )}
 
                 <button
                     className="btn-primary"
-                    style={{ width: '100%', padding: '8px', fontSize: '0.85rem' }}
+                    style={{ 
+                        width: '100%', 
+                        padding: '10px', 
+                        fontSize: '0.85rem',
+                        marginTop: 'auto' /* Pushes button to bottom */
+                    }}
                     onClick={() => addToCart(product)}
                 >
                     Comprar
