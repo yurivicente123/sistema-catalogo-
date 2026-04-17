@@ -1,10 +1,11 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { X, Trash2, Plus, Minus, MessageSquare, ShoppingBag } from 'lucide-react';
 import { useCart } from '../context/CartContext';
 import { API_FILE_URL } from '../services/api';
 
 const CartModal = ({ isOpen, onClose, settings }) => {
     const { cart, removeFromCart, updateQuantity, total, clearCart } = useCart();
+    const [notes, setNotes] = useState('');
 
     if (!isOpen) return null;
 
@@ -42,6 +43,13 @@ const CartModal = ({ isOpen, onClose, settings }) => {
         message += `━━━━━━━━━━━━━━━━━\n`;
         message += `💰 *TOTAL GERAL: R$ ${total.toFixed(2).replace('.', ',')}*\n`;
         message += `━━━━━━━━━━━━━━━━━\n\n`;
+
+        if (notes) {
+            message += `*📝 OBSERVAÇÕES DO CLIENTE:*\n`;
+            message += `${notes}\n`;
+            message += `━━━━━━━━━━━━━━━━━\n\n`;
+        }
+
         message += `🚀 *Aguardamos o seu pagamento!*\n`;
         message += `Muito obrigado pela preferência!✨`;
 
@@ -73,11 +81,18 @@ const CartModal = ({ isOpen, onClose, settings }) => {
                         </div>
                     ) : (
                         cart.map(item => (
-                            <div key={item.id} style={{ display: 'flex', gap: '1rem', marginBottom: '1.5rem', alignItems: 'center', background: '#fff', padding: '10px', borderRadius: '12px', boxShadow: '0 2px 8px rgba(0,0,0,0.05)' }}>
-                                <img src={`${API_FILE_URL}${item.imagem}`} alt={item.nome} style={{ width: '60px', height: '60px', objectFit: 'cover', borderRadius: '8px' }} />
+                            <div key={item.id} style={{ display: 'flex', gap: '1rem', marginBottom: '1.5rem', alignItems: 'center', background: '#fff', padding: '10px', borderRadius: '12px', boxShadow: '0 2px 8px rgba(0,0,0,0.05)', position: 'relative' }}>
+                                <img src={item.imagem.startsWith('http') ? item.imagem : `${API_FILE_URL}${item.imagem}`} alt={item.nome} style={{ width: '60px', height: '60px', objectFit: 'cover', borderRadius: '8px' }} />
                                 <div style={{ flex: 1 }}>
                                     <h4 style={{ fontSize: '0.85rem', fontWeight: 700 }}>{item.nome}</h4>
                                     <p style={{ fontWeight: 600, color: 'var(--primary)', fontSize: '0.9rem' }}>R$ {item.preco.toFixed(2).replace('.', ',')}</p>
+                                    
+                                    {item.compra_minima > 1 && item.quantity < item.compra_minima && (
+                                        <p style={{ fontSize: '0.7rem', color: '#ff4757', fontWeight: 600, marginTop: '2px' }}>
+                                            ⚠️ Mínimo: {item.compra_minima} unidades
+                                        </p>
+                                    )}
+
                                     <div style={{ display: 'flex', alignItems: 'center', gap: '0.8rem', marginTop: '0.5rem' }}>
                                         <button onClick={() => updateQuantity(item.id, -1)} style={{ padding: '4px', background: '#f0f0f0', borderRadius: '4px' }}><Minus size={14} /></button>
                                         <span style={{ fontWeight: 600, fontSize: '0.9rem' }}>{item.quantity}</span>
@@ -89,6 +104,28 @@ const CartModal = ({ isOpen, onClose, settings }) => {
                         ))
                     )}
                 </div>
+
+                {cart.length > 0 && (
+                    <div style={{ marginBottom: '1.5rem' }}>
+                        <label style={{ display: 'block', fontSize: '0.85rem', fontWeight: 600, marginBottom: '8px' }}>
+                            Informações sobre o tema / Observações:
+                        </label>
+                        <textarea 
+                            value={notes}
+                            onChange={(e) => setNotes(e.target.value)}
+                            placeholder="Ex: Tema Galinha Pintadinha, Nome: João, 2 Anos..."
+                            style={{ 
+                                width: '100%', 
+                                padding: '12px', 
+                                borderRadius: '12px', 
+                                border: '1px solid #ddd',
+                                minHeight: '80px',
+                                fontSize: '0.85rem',
+                                background: '#f9f9f9'
+                            }}
+                        />
+                    </div>
+                )}
 
                 {cart.length > 0 && (
                     <div style={{ borderTop: '2px dashed #eee', paddingTop: '1.5rem' }}>

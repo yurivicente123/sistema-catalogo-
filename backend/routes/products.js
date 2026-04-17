@@ -19,7 +19,7 @@ router.get('/', async (req, res) => {
 
 // Add product
 router.post('/', upload.single('imagem'), async (req, res) => {
-    const { nome, preco, categoria } = req.body;
+    const { nome, preco, categoria, descricao, compra_minima, prazo_entrega } = req.body;
     let imagemUrl = '';
 
     try {
@@ -38,7 +38,16 @@ router.post('/', upload.single('imagem'), async (req, res) => {
         }
 
         const { data, error } = await db.from('products').insert([
-            { id: uuidv4(), nome, preco: parseFloat(preco), imagem: imagemUrl, categoria }
+            { 
+                id: uuidv4(), 
+                nome, 
+                preco: parseFloat(preco), 
+                imagem: imagemUrl, 
+                categoria,
+                descricao,
+                compra_minima: parseInt(compra_minima) || 1,
+                prazo_entrega
+            }
         ]).select();
 
         if (error) throw error;
@@ -50,8 +59,15 @@ router.post('/', upload.single('imagem'), async (req, res) => {
 
 // Update product
 router.put('/:id', upload.single('imagem'), async (req, res) => {
-    const { nome, preco, categoria } = req.body;
-    const updates = { nome, preco: parseFloat(preco), categoria };
+    const { nome, preco, categoria, descricao, compra_minima, prazo_entrega } = req.body;
+    const updates = { 
+        nome, 
+        preco: parseFloat(preco), 
+        categoria,
+        descricao,
+        compra_minima: parseInt(compra_minima) || 1,
+        prazo_entrega
+    };
 
     try {
         if (req.file) {
