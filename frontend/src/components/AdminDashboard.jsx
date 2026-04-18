@@ -8,6 +8,7 @@ const AdminDashboard = ({ settings, setSettings }) => {
     const [products, setProducts] = useState([]);
     const [orders, setOrders] = useState([]);
     const [stats, setStats] = useState(null);
+    const [categories, setCategories] = useState([]);
     const [activeTab, setActiveTab] = useState('catalog'); // 'catalog', 'orders', 'finance'
     const [editingProduct, setEditingProduct] = useState(null);
     const [isFormOpen, setIsFormOpen] = useState(false);
@@ -31,6 +32,9 @@ const AdminDashboard = ({ settings, setSettings }) => {
     const fetchProducts = async () => {
         const res = await getProducts();
         setProducts(res.data);
+        // Extract unique categories
+        const uniqueCats = [...new Set(res.data.map(p => p.categoria))].filter(Boolean);
+        setCategories(uniqueCats);
     };
 
     const fetchOrders = async () => {
@@ -108,13 +112,31 @@ const AdminDashboard = ({ settings, setSettings }) => {
                     
                     <div style={{ height: '2rem' }}></div>
 
-                    <button onClick={handleLogout} className="sidebar-btn" style={{ color: '#ff4757', marginTop: 'auto' }}>
+                    <button onClick={handleLogout} className="sidebar-btn logout" style={{ color: '#ff4757', marginTop: 'auto' }}>
                         <LogOut size={20} /> <span>Sair</span>
                     </button>
                 </nav>
             </aside>
 
             <style>{`
+                .admin-layout {
+                    display: flex;
+                    min-height: 100vh;
+                    background: #f4f7f6;
+                }
+                .admin-sidebar {
+                    width: 260px;
+                    background: #2f3542;
+                    color: white;
+                    padding: 2rem;
+                    display: flex;
+                    flex-direction: column;
+                    position: sticky;
+                    top: 0;
+                    height: 100vh;
+                    z-index: 100;
+                    transition: transform 0.3s ease;
+                }
                 .sidebar-btn {
                     background: none;
                     color: rgba(255,255,255,0.7);
@@ -138,6 +160,13 @@ const AdminDashboard = ({ settings, setSettings }) => {
                     background: var(--primary);
                     color: white;
                     box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+                }
+                .admin-main {
+                    flex: 1;
+                    padding: 2rem;
+                    max-width: 1200px;
+                    margin: 0 auto;
+                    width: 100%;
                 }
                 .stat-card {
                     background: white;
@@ -165,6 +194,49 @@ const AdminDashboard = ({ settings, setSettings }) => {
                 .badge-pendente { background: #fff8e1; color: #f57f17; }
                 .badge-fechado { background: #e8f5e9; color: #2e7d32; }
                 .badge-cancelado { background: #ffebee; color: #c62828; }
+
+                /* Mobile Layout Adjustments */
+                @media (max-width: 768px) {
+                    .admin-layout {
+                        flex-direction: column;
+                    }
+                    .admin-sidebar {
+                        width: 100%;
+                        height: auto;
+                        position: sticky;
+                        top: 0;
+                        padding: 1rem;
+                        flex-direction: row;
+                        justify-content: space-around;
+                        align-items: center;
+                        gap: 10px;
+                    }
+                    .admin-sidebar h2 { display: none; }
+                    .sidebar-btn span { display: none; }
+                    .sidebar-btn { justify-content: center; padding: 10px; width: auto; }
+                    .sidebar-btn.logout { margin-top: 0 !important; }
+                    
+                    .admin-main { padding: 1rem; }
+                    .admin-table { display: none; } /* Hide complex tables on mobile */
+                    
+                    .mobile-card-list {
+                        display: grid;
+                        gap: 1rem;
+                    }
+                    .mobile-card {
+                        background: white;
+                        padding: 1rem;
+                        border-radius: 12px;
+                        box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+                        display: flex;
+                        align-items: center;
+                        gap: 1rem;
+                    }
+                }
+                
+                @media (min-width: 769px) {
+                    .mobile-card-list { display: none; }
+                }
             `}</style>
 
             <main className="admin-main">
@@ -205,6 +277,8 @@ const AdminDashboard = ({ settings, setSettings }) => {
 
                         <section className="glass" style={{ padding: '2rem', borderRadius: 'var(--radius)' }}>
                             <h2 style={{ marginBottom: '1.5rem' }}>Produtos do Catálogo</h2>
+                            
+                            {/* Desktop View Table */}
                             <table className="admin-table" style={{ width: '100%', borderCollapse: 'collapse' }}>
                                 <thead>
                                     <tr style={{ background: '#f5f5f5', textAlign: 'left' }}>
@@ -231,6 +305,24 @@ const AdminDashboard = ({ settings, setSettings }) => {
                                     ))}
                                 </tbody>
                             </table>
+
+                            {/* Mobile View Card List */}
+                            <div className="mobile-card-list">
+                                {products.map(p => (
+                                    <div key={p.id} className="mobile-card">
+                                        <img src={`${API_FILE_URL}${p.imagem}`} style={{ width: '60px', height: '60px', borderRadius: '8px', objectFit: 'cover' }} />
+                                        <div style={{ flex: 1 }}>
+                                            <div style={{ fontWeight: 700, fontSize: '0.9rem' }}>{p.nome}</div>
+                                            <div style={{ color: 'var(--primary)', fontWeight: 800 }}>R$ {p.preco.toFixed(2)}</div>
+                                            <div style={{ fontSize: '0.75rem', color: 'var(--gray)' }}>{p.categoria}</div>
+                                        </div>
+                                        <div style={{ display: 'flex', gap: '10px' }}>
+                                            <button onClick={() => { setEditingProduct(p); setIsFormOpen(true); }} style={{ color: 'var(--primary)', background: 'none', border: 'none' }}><Edit size={20}/></button>
+                                            <button onClick={() => handleDelete(p.id)} style={{ color: '#ff4757', background: 'none', border: 'none' }}><Trash size={20}/></button>
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
                         </section>
                     </>
                 )}
@@ -243,7 +335,8 @@ const AdminDashboard = ({ settings, setSettings }) => {
                         </div>
 
                         <section className="glass" style={{ padding: '1.5rem', borderRadius: '16px' }}>
-                            <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+                            {/* Desktop Table */}
+                            <table className="admin-table" style={{ width: '100%', borderCollapse: 'collapse' }}>
                                 <thead>
                                     <tr style={{ borderBottom: '2px solid #eee', textAlign: 'left', color: 'var(--gray)', fontSize: '0.85rem' }}>
                                         <th style={{ padding: '1rem' }}>Data</th>
@@ -301,6 +394,39 @@ const AdminDashboard = ({ settings, setSettings }) => {
                                     ))}
                                 </tbody>
                             </table>
+
+                            {/* Mobile Orders List */}
+                            <div className="mobile-card-list">
+                                {orders.map(order => (
+                                    <div key={order.id} className="mobile-card" style={{ flexDirection: 'column', alignItems: 'flex-start' }}>
+                                        <div style={{ display: 'flex', justifyContent: 'space-between', width: '100%', borderBottom: '1px solid #eee', paddingBottom: '8px' }}>
+                                            <span style={{ fontSize: '0.75rem', color: 'var(--gray)' }}>{new Date(order.created_at).toLocaleString('pt-BR')}</span>
+                                            <span className={`badge badge-${order.status}`}>{order.status}</span>
+                                        </div>
+                                        <div style={{ fontSize: '0.85rem', fontWeight: 600, margin: '8px 0' }}>
+                                            {order.items.map(item => `${item.quantity}x ${item.nome}`).join(', ')}
+                                        </div>
+                                        {order.customer_notes && (
+                                            <div style={{ fontSize: '0.8rem', background: '#f9f9f9', padding: '8px', borderRadius: '8px', width: '100%', marginBottom: '8px' }}>
+                                                🗨️ {order.customer_notes}
+                                            </div>
+                                        )}
+                                        <div style={{ display: 'flex', justifyContent: 'space-between', width: '100%', alignItems: 'center' }}>
+                                            <div style={{ fontWeight: 800, fontSize: '1.1rem', color: 'var(--primary)' }}>
+                                                R$ {parseFloat(order.total_price).toFixed(2).replace('.', ',')}
+                                            </div>
+                                            <div style={{ display: 'flex', gap: '10px' }}>
+                                                {order.status === 'pendente' && (
+                                                    <>
+                                                        <button onClick={() => handleUpdateOrderStatus(order.id, 'fechado')} style={{ border: 'none', background: '#e8f5e9', color: '#2e7d32', padding: '10px', borderRadius: '8px' }}><Check size={20} /></button>
+                                                        <button onClick={() => handleUpdateOrderStatus(order.id, 'cancelado')} style={{ border: 'none', background: '#ffebee', color: '#c62828', padding: '10px', borderRadius: '8px' }}><XCircle size={20} /></button>
+                                                    </>
+                                                )}
+                                            </div>
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
                         </section>
                     </>
                 )}
@@ -364,6 +490,7 @@ const AdminDashboard = ({ settings, setSettings }) => {
                 {isFormOpen && (
                     <AdminProductForm
                         product={editingProduct}
+                        categories={categories}
                         onClose={() => setIsFormOpen(false)}
                         onSuccess={() => { setIsFormOpen(false); fetchProducts(); }}
                     />

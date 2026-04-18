@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { X, Upload } from 'lucide-react';
 import { addProduct, updateProduct, API_FILE_URL } from '../services/api';
 
-const AdminProductForm = ({ product, onClose, onSuccess }) => {
+const AdminProductForm = ({ product, categories, onClose, onSuccess }) => {
     const [nome, setNome] = useState(product?.nome || '');
     const [preco, setPreco] = useState(product?.preco || '');
     const [categoria, setCategoria] = useState(product?.categoria || 'Geral');
@@ -69,7 +69,20 @@ const AdminProductForm = ({ product, onClose, onSuccess }) => {
                     </div>
                     <div>
                         <label style={{ display: 'block', marginBottom: '0.4rem', fontWeight: 600, fontSize: '0.9rem' }}>Categoria</label>
-                        <input type="text" value={categoria} onChange={e => setCategoria(e.target.value)} style={{ width: '100%', padding: '10px', borderRadius: '10px', border: '1px solid #ddd' }} placeholder="Ex: Canecas" required />
+                        <input 
+                            type="text" 
+                            list="category-suggestions"
+                            value={categoria} 
+                            onChange={e => setCategoria(e.target.value)} 
+                            style={{ width: '100%', padding: '10px', borderRadius: '10px', border: '1px solid #ddd' }} 
+                            placeholder="Escolha ou digite..." 
+                            required 
+                        />
+                        <datalist id="category-suggestions">
+                            {categories?.map(cat => (
+                                <option key={cat} value={cat} />
+                            ))}
+                        </datalist>
                     </div>
                     <div>
                         <label style={{ display: 'block', marginBottom: '0.4rem', fontWeight: 600, fontSize: '0.9rem' }}>Pedido Mínimo</label>
