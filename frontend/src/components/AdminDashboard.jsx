@@ -373,16 +373,4 @@ const AdminDashboard = ({ settings, setSettings }) => {
     );
 };
 
-                {isFormOpen && (
-                    <AdminProductForm
-                        product={editingProduct}
-                        onClose={() => setIsFormOpen(false)}
-                        onSuccess={() => { setIsFormOpen(false); fetchProducts(); }}
-                    />
-                )}
-            </main>
-        </div>
-    );
-};
-
 export default AdminDashboard;
