@@ -6,6 +6,7 @@ import dotenv from 'dotenv';
 import productRoutes from './routes/products.js';
 import authRoutes from './routes/auth.js';
 import settingsRoutes from './routes/settings.js';
+import orderRoutes from './routes/orders.js';
 import supabase from './database.js';
 
 dotenv.config();
@@ -36,6 +37,7 @@ if (isProd) {
 app.use('/api/products', productRoutes);
 app.use('/api/auth', authRoutes);
 app.use('/api/settings', settingsRoutes);
+app.use('/api/orders', orderRoutes);
 
 // Initializar Admin no Supabase (Segurança)
 const initAdmin = async () => {

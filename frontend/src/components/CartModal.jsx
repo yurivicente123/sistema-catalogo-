@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { X, Trash2, Plus, Minus, MessageSquare, ShoppingBag } from 'lucide-react';
 import { useCart } from '../context/CartContext';
-import { API_FILE_URL } from '../services/api';
+import { API_FILE_URL, createOrder } from '../services/api';
 
 const CartModal = ({ isOpen, onClose, settings }) => {
     const { cart, removeFromCart, updateQuantity, total, clearCart } = useCart();
@@ -9,7 +9,25 @@ const CartModal = ({ isOpen, onClose, settings }) => {
 
     if (!isOpen) return null;
 
-    const handleCheckout = () => {
+    const handleCheckout = async () => {
+        // 1. Silent Save to Database
+        try {
+            await createOrder({
+                total_price: total,
+                customer_notes: notes,
+                items: cart.map(item => ({
+                    id: item.id,
+                    nome: item.nome,
+                    preco: item.preco,
+                    quantity: item.quantity
+                }))
+            });
+            console.log('Pedido salvo no banco de dados com sucesso.');
+        } catch (err) {
+            console.error('Erro ao salvar pedido silenciosamente:', err);
+            // We still proceed to WhatsApp even if it fails to not block the user
+        }
+
         const whatsappNumber = settings.whatsapp || '5511999999999';
         const storeName = (settings.themeName || 'SUBLIME STORE').toUpperCase();
         const storeAddress = settings.storeAddress || 'ENDEREÇO NÃO CONFIGURADO';

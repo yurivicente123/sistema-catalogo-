@@ -6,6 +6,7 @@ const AdminProductForm = ({ product, onClose, onSuccess }) => {
     const [nome, setNome] = useState(product?.nome || '');
     const [preco, setPreco] = useState(product?.preco || '');
     const [categoria, setCategoria] = useState(product?.categoria || 'Geral');
+    const [precoCusto, setPrecoCusto] = useState(product?.preco_custo || '0');
     const [descricao, setDescricao] = useState(product?.descricao || '');
     const [compraMinima, setCompraMinima] = useState(product?.compra_minima || '1');
     const [prazoEntrega, setPrazoEntrega] = useState(product?.prazo_entrega || '');
@@ -26,6 +27,7 @@ const AdminProductForm = ({ product, onClose, onSuccess }) => {
         formData.append('nome', nome);
         formData.append('preco', preco);
         formData.append('categoria', categoria);
+        formData.append('preco_custo', precoCusto);
         formData.append('descricao', descricao);
         formData.append('compra_minima', compraMinima);
         formData.append('prazo_entrega', prazoEntrega);
@@ -58,8 +60,12 @@ const AdminProductForm = ({ product, onClose, onSuccess }) => {
 
                 <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))', gap: '1rem', marginBottom: '1.2rem' }}>
                     <div>
-                        <label style={{ display: 'block', marginBottom: '0.4rem', fontWeight: 600, fontSize: '0.9rem' }}>Preço (R$)</label>
+                        <label style={{ display: 'block', marginBottom: '0.4rem', fontWeight: 600, fontSize: '0.9rem' }}>Venda (R$)</label>
                         <input type="number" step="0.01" value={preco} onChange={e => setPreco(e.target.value)} style={{ width: '100%', padding: '10px', borderRadius: '10px', border: '1px solid #ddd' }} placeholder="0.00" required />
+                    </div>
+                    <div>
+                        <label style={{ display: 'block', marginBottom: '0.4rem', fontWeight: 600, fontSize: '0.9rem' }}>Custo (R$)</label>
+                        <input type="number" step="0.01" value={precoCusto} onChange={e => setPrecoCusto(e.target.value)} style={{ width: '100%', padding: '10px', borderRadius: '10px', border: '1px solid #ddd' }} placeholder="0.00" />
                     </div>
                     <div>
                         <label style={{ display: 'block', marginBottom: '0.4rem', fontWeight: 600, fontSize: '0.9rem' }}>Categoria</label>

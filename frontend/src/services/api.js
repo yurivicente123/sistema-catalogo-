@@ -28,5 +28,11 @@ export const deleteProduct = (id) => api.delete(`/products/${id}`);
 export const getSettings = () => api.get('/settings');
 export const updateSettings = (data) => api.post('/settings', data);
 
+// Orders
+export const createOrder = (orderData) => api.post('/orders', orderData);
+export const getOrders = () => api.get('/orders');
+export const updateOrderStatus = (id, status) => api.patch(`/orders/${id}`, { status });
+export const getOrderStats = () => api.get('/orders/stats');
+
 export { API_FILE_URL };
 export default api;
