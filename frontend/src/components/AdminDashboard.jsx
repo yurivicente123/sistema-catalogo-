@@ -3,6 +3,17 @@ import { Link, useNavigate } from 'react-router-dom';
 import { ShoppingBag, Settings, LogOut, Plus, Edit, Trash, Upload, Package, Clock, TrendingUp, Check, XCircle, DollarSign, FileText } from 'lucide-react';
 import { getProducts, deleteProduct, updateSettings, API_FILE_URL, getOrders, updateOrderStatus, getOrderStats } from '../services/api';
 import AdminProductForm from './AdminProductForm';
+const GOOGLE_FONTS = [
+    'Inter', 'Roboto', 'Montserrat', 'Playfair Display', 'Dancing Script', 'Pacifico', 'Outfit', 'Quicksand'
+];
+
+const typographyFields = [
+    { key: 'storeName', label: 'Nome da Loja (Barra Superior)' },
+    { key: 'heroTitle', label: 'Título Destaque (Pequeno)' },
+    { key: 'heroSubtitle', label: 'Subtítulo Principal' },
+    { key: 'productName', label: 'Nome do Produto (Cartões)' },
+    { key: 'productPrice', label: 'Preço do Produto (Cartões)' }
+];
 
 const AdminDashboard = ({ settings, setSettings }) => {
     const [products, setProducts] = useState([]);
@@ -534,6 +545,56 @@ const AdminDashboard = ({ settings, setSettings }) => {
                                         <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 600 }}>Texto Rápido de Banner (Abaixo do título)</label>
                                         <input type="text" value={settings.bannerText || ''} onChange={e => setSettings({...settings, bannerText: e.target.value})} placeholder="Ex: Envie-nos seu tema e nós faremos o resto!" style={{ width: '100%', padding: '10px', borderRadius: '8px', border: '1px solid #ddd' }} />
                                     </div>
+                                </div>
+                            </section>
+
+                            {/* Tipografia Avançada */}
+                            <section className="glass" style={{ padding: '2rem', borderRadius: '16px' }}>
+                                <h2 style={{ marginBottom: '1.5rem', fontSize: '1.2rem' }}>Tipografia e Estilo das Fontes</h2>
+                                <p style={{ color: 'var(--gray)', fontSize: '0.9rem', marginBottom: '1.5rem' }}>Personalize especificamente cada título principal da sua loja.</p>
+                                
+                                <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
+                                    {typographyFields.map(field => (
+                                        <div key={field.key} style={{ background: '#fafafa', padding: '1rem', borderRadius: '12px', border: '1px solid #eee' }}>
+                                            <label style={{ display: 'block', marginBottom: '1rem', fontWeight: 700, color: '#444' }}>{field.label}</label>
+                                            
+                                            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))', gap: '1rem' }}>
+                                                <div>
+                                                    <label style={{ display: 'block', fontSize: '0.8rem', fontWeight: 600, marginBottom: '0.3rem' }}>Fonte</label>
+                                                    <select 
+                                                        value={settings[`font_${field.key}`] || 'Inter'}
+                                                        onChange={e => setSettings({...settings, [`font_${field.key}`]: e.target.value})}
+                                                        style={{ width: '100%', padding: '8px', borderRadius: '6px', border: '1px solid #ddd', fontFamily: settings[`font_${field.key}`] || 'Inter' }}
+                                                    >
+                                                        {GOOGLE_FONTS.map(font => <option key={font} value={font} style={{ fontFamily: font }}>{font}</option>)}
+                                                    </select>
+                                                </div>
+                                                
+                                                <div>
+                                                    <label style={{ display: 'block', fontSize: '0.8rem', fontWeight: 600, marginBottom: '0.3rem' }}>Estilo/Peso</label>
+                                                    <select 
+                                                        value={settings[`weight_${field.key}`] || 'normal'}
+                                                        onChange={e => setSettings({...settings, [`weight_${field.key}`]: e.target.value})}
+                                                        style={{ width: '100%', padding: '8px', borderRadius: '6px', border: '1px solid #ddd' }}
+                                                    >
+                                                        <option value="light">Fininha (Light)</option>
+                                                        <option value="normal">Normal</option>
+                                                        <option value="bold">Negrito (Bold)</option>
+                                                    </select>
+                                                </div>
+                                                
+                                                <div>
+                                                    <label style={{ display: 'block', fontSize: '0.8rem', fontWeight: 600, marginBottom: '0.3rem' }}>Cor Especifica</label>
+                                                    <input 
+                                                        type="color" 
+                                                        value={settings[`color_${field.key}`] || '#333333'} 
+                                                        onChange={e => setSettings({...settings, [`color_${field.key}`]: e.target.value})}
+                                                        style={{ width: '100%', height: '36px', padding: '2px', borderRadius: '6px', border: '1px solid #ddd', cursor: 'pointer' }}
+                                                    />
+                                                </div>
+                                            </div>
+                                        </div>
+                                    ))}
                                 </div>
                             </section>
 
