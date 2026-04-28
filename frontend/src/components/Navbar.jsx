@@ -4,7 +4,8 @@ import { useCart } from '../context/CartContext';
 import { Link, useLocation } from 'react-router-dom';
 
 const Navbar = ({ onCartClick, settings }) => {
-    const { itemCount } = useCart();
+    const { cart } = useCart();
+    const uniqueItemCount = cart.length;
     const location = useLocation();
     const isAdmin = location.pathname.startsWith('/admin');
 
@@ -34,14 +35,14 @@ const Navbar = ({ onCartClick, settings }) => {
                         padding: '10px', borderRadius: '50%', boxShadow: 'var(--shadow)', border: 'none'
                     }}>
                         <ShoppingBag size={24} />
-                        {itemCount > 0 && (
+                        {uniqueItemCount > 0 && (
                             <span style={{
                                 position: 'absolute', top: '-5px', right: '-5px', background: 'var(--primary)',
                                 color: 'white', borderRadius: '50%', width: '22px', height: '22px',
                                 display: 'flex', alignItems: 'center', justifyContent: 'center',
                                 fontSize: '11px', fontWeight: 700, border: '2px solid white'
                             }}>
-                                {itemCount}
+                                {uniqueItemCount}
                             </span>
                         )}
                     </button>

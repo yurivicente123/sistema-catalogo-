@@ -72,7 +72,9 @@ const CartModal = ({ isOpen, onClose, settings }) => {
         message += `Muito obrigado pela preferência!✨`;
 
         const encodedMessage = encodeURIComponent(message);
-        window.open(`https://wa.me/${whatsappNumber}?text=${encodedMessage}`, '_blank');
+        
+        // Redireciona na mesma aba para evitar bloqueadores de pop-up no celular
+        window.location.href = `https://wa.me/${whatsappNumber}?text=${encodedMessage}`;
     };
 
     return (
