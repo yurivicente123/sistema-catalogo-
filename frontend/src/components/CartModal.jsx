@@ -55,7 +55,7 @@ const CartModal = ({ isOpen, onClose, settings }) => {
         cart.forEach(item => {
             const itemTotal = (item.preco * item.quantity).toFixed(2).replace('.', ',');
             message += `🔹 *${item.nome.toUpperCase()}*\n`;
-            message += `   ${item.quantity.toFixed(1)} x R$ ${item.preco.toFixed(2).replace('.', ',')} = *R$ ${itemTotal}*\n`;
+            message += `   ${item.quantity} x R$ ${item.preco.toFixed(2).replace('.', ',')} = *R$ ${itemTotal}*\n`;
         });
 
         message += `━━━━━━━━━━━━━━━━━\n`;
@@ -149,9 +149,9 @@ const CartModal = ({ isOpen, onClose, settings }) => {
 
                 {cart.length > 0 && (
                     <div style={{ borderTop: '2px dashed #eee', paddingTop: '1.5rem' }}>
-                        <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '1.5rem' }}>
-                            <span style={{ fontWeight: 600, fontSize: '1.1rem' }}>Total Geral</span>
-                            <span style={{ fontSize: '1.6rem', fontWeight: 800, color: 'var(--primary)' }}>R$ {total.toFixed(2).replace('.', ',')}</span>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '1.5rem', alignItems: 'center' }}>
+                            <span style={{ fontWeight: 600, fontSize: '1.1rem', color: '#000' }}>Total Geral</span>
+                            <span style={{ fontSize: '1.6rem', fontWeight: 800, color: '#000' }}>R$ {total.toFixed(2).replace('.', ',')}</span>
                         </div>
                         <button
                             className="btn-primary"
