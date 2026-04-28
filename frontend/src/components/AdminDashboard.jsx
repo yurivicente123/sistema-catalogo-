@@ -109,6 +109,12 @@ const AdminDashboard = ({ settings, setSettings }) => {
                     >
                         <TrendingUp size={20} /> <span>Financeiro</span>
                     </button>
+                    <button 
+                        onClick={() => setActiveTab('settings')}
+                        className={activeTab === 'settings' ? 'sidebar-btn active' : 'sidebar-btn'}
+                    >
+                        <Settings size={20} /> <span>Configurações</span>
+                    </button>
                     
                     <div style={{ height: '2rem' }}></div>
 
@@ -249,31 +255,7 @@ const AdminDashboard = ({ settings, setSettings }) => {
                             </button>
                         </div>
 
-                        {/* Settings and Product List Content */}
-                        <section className="glass" style={{ padding: '2rem', borderRadius: 'var(--radius)', marginBottom: '2rem' }}>
-                            <h2 style={{ marginBottom: '1.5rem' }}>Configurações da Loja</h2>
-                            {/* ... (Existing Settings Inputs) */}
-                            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '1.5rem' }}>
-                                <div>
-                                    <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 600 }}>Nome da Loja</label>
-                                    <input type="text" value={settings.themeName || ''} onChange={e => setSettings({ ...settings, themeName: e.target.value })} style={{ width: '100%', padding: '10px', borderRadius: '8px', border: '1px solid #ddd' }} />
-                                </div>
-                                <div>
-                                    <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 600 }}>Telefone / WhatsApp</label>
-                                    <input type="text" value={settings.storeContact || ''} onChange={e => setSettings({ ...settings, storeContact: e.target.value, whatsapp: e.target.value })} style={{ width: '100%', padding: '10px', borderRadius: '8px', border: '1px solid #ddd' }} />
-                                </div>
-                                <div>
-                                    <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 600 }}>Instagram (Link ou @)</label>
-                                    <input type="text" value={settings.instagram || ''} onChange={e => setSettings({ ...settings, instagram: e.target.value })} placeholder="Ex: @seuluxo" style={{ width: '100%', padding: '10px', borderRadius: '8px', border: '1px solid #ddd' }} />
-                                </div>
-                            </div>
-                            {/* Simplified for brevity, will include the full section in actual replacement */}
-                            <div style={{ marginTop: '1.5rem' }}>
-                                <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 600 }}>Endereço Completo</label>
-                                <textarea value={settings.storeAddress || ''} onChange={e => setSettings({ ...settings, storeAddress: e.target.value })} style={{ width: '100%', padding: '10px', borderRadius: '8px', border: '1px solid #ddd', minHeight: '60px' }} />
-                                <button className="btn-primary" style={{ marginTop: '1rem', padding: '10px 30px' }} onClick={handleSaveSettings}>Salvar Configurações</button>
-                            </div>
-                        </section>
+
 
                         <section className="glass" style={{ padding: '2rem', borderRadius: 'var(--radius)' }}>
                             <h2 style={{ marginBottom: '1.5rem' }}>Produtos do Catálogo</h2>
@@ -482,6 +464,109 @@ const AdminDashboard = ({ settings, setSettings }) => {
                                 ) : (
                                     <p style={{ color: 'var(--gray)' }}>Nenhuma venda fechada ainda.</p>
                                 )}
+                            </section>
+                        </div>
+                    </>
+                )}
+
+                {activeTab === 'settings' && (
+                    <>
+                        <div style={{ marginBottom: '2rem' }}>
+                            <h1>Configurações da Loja</h1>
+                            <p style={{ color: 'var(--gray)' }}>Gerencie informações de contato, textos do site e aparência da logo.</p>
+                        </div>
+                        
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
+                            {/* Identidade Visual */}
+                            <section className="glass" style={{ padding: '2rem', borderRadius: '16px' }}>
+                                <h2 style={{ marginBottom: '1.5rem', fontSize: '1.2rem' }}>Identidade Visual e Logo</h2>
+                                
+                                <div style={{ marginBottom: '1.5rem' }}>
+                                    <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 600 }}>Logo da Loja</label>
+                                    <div style={{ display: 'flex', alignItems: 'center', gap: '20px' }}>
+                                        <div style={{ width: '80px', height: '80px', borderRadius: '12px', background: '#f5f5f5', overflow: 'hidden', border: '2px solid #eee' }}>
+                                            {(logoFile || settings.siteLogo) ? (
+                                                <img 
+                                                    src={logoFile ? URL.createObjectURL(logoFile) : `${API_FILE_URL}${settings.siteLogo}`} 
+                                                    alt="Logo Admin"
+                                                    style={{ width: '100%', height: '100%', objectFit: 'contain' }}
+                                                />
+                                            ) : (
+                                                <div style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#999' }}>Sem Logo</div>
+                                            )}
+                                        </div>
+                                        <input type="file" id="logoUpload" style={{ display: 'none' }} accept="image/*" onChange={(e) => setLogoFile(e.target.files[0])} />
+                                        <label htmlFor="logoUpload" style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '10px 20px', background: '#f0f0f0', borderRadius: '8px', cursor: 'pointer', fontWeight: 500 }}>
+                                            <Upload size={18} /> Carregar Nova Logo
+                                        </label>
+                                    </div>
+                                </div>
+
+                                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '1rem', background: '#fafafa', padding: '1.5rem', borderRadius: '12px' }}>
+                                    <div>
+                                        <label style={{ display: 'block', marginBottom: '0.5rem', fontSize: '0.9rem', fontWeight: 600 }}>Tamanho / Zoom (%)</label>
+                                        <input type="number" value={settings.logoZoom || 100} onChange={e => setSettings({...settings, logoZoom: e.target.value})} style={{ width: '100%', padding: '8px', borderRadius: '6px', border: '1px solid #ddd' }} />
+                                    </div>
+                                    <div>
+                                        <label style={{ display: 'block', marginBottom: '0.5rem', fontSize: '0.9rem', fontWeight: 600 }}>Posição X (%)</label>
+                                        <input type="number" value={settings.logoPosX || 50} onChange={e => setSettings({...settings, logoPosX: e.target.value})} style={{ width: '100%', padding: '8px', borderRadius: '6px', border: '1px solid #ddd' }} />
+                                    </div>
+                                    <div>
+                                        <label style={{ display: 'block', marginBottom: '0.5rem', fontSize: '0.9rem', fontWeight: 600 }}>Posição Y (%)</label>
+                                        <input type="number" value={settings.logoPosY || 50} onChange={e => setSettings({...settings, logoPosY: e.target.value})} style={{ width: '100%', padding: '8px', borderRadius: '6px', border: '1px solid #ddd' }} />
+                                    </div>
+                                </div>
+                            </section>
+
+                            {/* Textos da Pagina Inicial */}
+                            <section className="glass" style={{ padding: '2rem', borderRadius: '16px' }}>
+                                <h2 style={{ marginBottom: '1.5rem', fontSize: '1.2rem' }}>Textos da Página Inicial</h2>
+                                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '1.5rem' }}>
+                                    <div style={{ gridColumn: '1 / -1' }}>
+                                        <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 600 }}>Título Destaque (Pequeno no topo)</label>
+                                        <input type="text" value={settings.heroTitle || ''} onChange={e => setSettings({...settings, heroTitle: e.target.value})} placeholder="Ex: Personalizados para você" style={{ width: '100%', padding: '10px', borderRadius: '8px', border: '1px solid #ddd' }} />
+                                    </div>
+                                    <div style={{ gridColumn: '1 / -1' }}>
+                                        <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 600 }}>Subtítulo Principal (A frase de impacto)</label>
+                                        <input type="text" value={settings.heroSubtitle || ''} onChange={e => setSettings({...settings, heroSubtitle: e.target.value})} placeholder="Ex: Todos os itens para festa personalizamos de acordo com o seu tema!" style={{ width: '100%', padding: '10px', borderRadius: '8px', border: '1px solid #ddd' }} />
+                                    </div>
+                                    <div style={{ gridColumn: '1 / -1' }}>
+                                        <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 600 }}>Texto Rápido de Banner (Abaixo do título)</label>
+                                        <input type="text" value={settings.bannerText || ''} onChange={e => setSettings({...settings, bannerText: e.target.value})} placeholder="Ex: Envie-nos seu tema e nós faremos o resto!" style={{ width: '100%', padding: '10px', borderRadius: '8px', border: '1px solid #ddd' }} />
+                                    </div>
+                                </div>
+                            </section>
+
+                            {/* Informações Gerais */}
+                            <section className="glass" style={{ padding: '2rem', borderRadius: '16px' }}>
+                                <h2 style={{ marginBottom: '1.5rem', fontSize: '1.2rem' }}>Informações de Contato e Loja</h2>
+                                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '1.5rem' }}>
+                                    <div>
+                                        <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 600 }}>Nome da Loja</label>
+                                        <input type="text" value={settings.themeName || ''} onChange={e => setSettings({ ...settings, themeName: e.target.value })} style={{ width: '100%', padding: '10px', borderRadius: '8px', border: '1px solid #ddd' }} />
+                                    </div>
+                                    <div>
+                                        <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 600 }}>Cor Principal (Hexadecimal)</label>
+                                        <input type="color" value={settings.primaryColor || '#ff4757'} onChange={e => setSettings({ ...settings, primaryColor: e.target.value })} style={{ width: '100%', height: '40px', padding: '2px', borderRadius: '8px', border: '1px solid #ddd', cursor: 'pointer' }} />
+                                    </div>
+                                    <div>
+                                        <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 600 }}>Telefone / WhatsApp</label>
+                                        <input type="text" value={settings.storeContact || ''} onChange={e => setSettings({ ...settings, storeContact: e.target.value, whatsapp: e.target.value })} placeholder="Ex: 5511999999999" style={{ width: '100%', padding: '10px', borderRadius: '8px', border: '1px solid #ddd' }} />
+                                    </div>
+                                    <div>
+                                        <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 600 }}>Instagram</label>
+                                        <input type="text" value={settings.instagram || ''} onChange={e => setSettings({ ...settings, instagram: e.target.value })} placeholder="Ex: @seuluxo" style={{ width: '100%', padding: '10px', borderRadius: '8px', border: '1px solid #ddd' }} />
+                                    </div>
+                                    <div style={{ gridColumn: '1 / -1' }}>
+                                        <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 600 }}>Endereço Completo</label>
+                                        <textarea value={settings.storeAddress || ''} onChange={e => setSettings({ ...settings, storeAddress: e.target.value })} style={{ width: '100%', padding: '10px', borderRadius: '8px', border: '1px solid #ddd', minHeight: '60px' }} />
+                                    </div>
+                                </div>
+                                <div style={{ marginTop: '2rem', display: 'flex', justifyContent: 'flex-end' }}>
+                                    <button className="btn-primary" style={{ padding: '12px 30px', fontSize: '1.1rem' }} onClick={handleSaveSettings}>
+                                        Salvar Configurações
+                                    </button>
+                                </div>
                             </section>
                         </div>
                     </>
