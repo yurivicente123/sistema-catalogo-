@@ -37,9 +37,10 @@ const ProductModal = ({ product, onClose }) => {
     // Generate quantity options
     const options = [];
     const min = product.compra_minima || 1;
-    // If minimum is large (e.g. 10), increment by 10 or 5. Else increment by 1.
+    // Se o pedido mínimo for alto, pula de "mínimo" em "mínimo", se não, de 1 em 1.
     const step = min >= 10 ? 10 : (min >= 5 ? 5 : 1); 
-    for (let i = 0; i < 20; i++) {
+    // Reduzindo para apenas 2 opções conforme pedido
+    for (let i = 0; i < 2; i++) {
         options.push(min + (i * step));
     }
 

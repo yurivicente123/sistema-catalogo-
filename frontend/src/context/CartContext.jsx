@@ -16,7 +16,7 @@ export const CartProvider = ({ children }) => {
     }, [cart]);
 
     const addToCart = (product) => {
-        const qtyToAdd = product.quantity || 1;
+        const qtyToAdd = product.quantity || product.compra_minima || 1;
         setCart(prev => {
             const existing = prev.find(item => item.id === product.id);
             if (existing) {
@@ -39,7 +39,8 @@ export const CartProvider = ({ children }) => {
     const updateQuantity = (id, amount) => {
         setCart(prev => prev.map(item => {
             if (item.id === id) {
-                const newQty = Math.max(1, item.quantity + amount);
+                const minQty = item.compra_minima || 1;
+                const newQty = Math.max(minQty, item.quantity + amount);
                 return { ...item, quantity: newQty };
             }
             return item;
