@@ -3,15 +3,20 @@ import { useCart } from '../context/CartContext';
 import { API_FILE_URL } from '../services/api';
 
 const ProductCard = ({ product, onOpenModal }) => {
+    const { addToCart } = useCart();
     const imageUrl = product.imagem?.startsWith('http') ? product.imagem : (product.imagem ? `${API_FILE_URL}${product.imagem}` : 'https://via.placeholder.com/300x300?text=Produto');
 
     return (
-        <div className="animate-fade" style={{ 
+        <div className="animate-fade" onClick={() => onOpenModal(product)} style={{ 
             background: 'transparent', 
             display: 'flex', 
             flexDirection: 'column',
-            height: '100%' 
-        }}>
+            height: '100%',
+            cursor: 'pointer',
+            transition: 'transform 0.2s ease',
+        }}
+        onMouseEnter={e => e.currentTarget.style.transform = 'scale(1.02)'}
+        onMouseLeave={e => e.currentTarget.style.transform = 'scale(1)'}>
             <div style={{
                 position: 'relative',
                 borderRadius: '0', 
@@ -94,11 +99,16 @@ const ProductCard = ({ product, onOpenModal }) => {
                         width: '100%', 
                         padding: '10px', 
                         fontSize: '0.85rem',
-                        marginTop: 'auto'
+                        marginTop: 'auto',
+                        position: 'relative',
+                        zIndex: 2
                     }}
-                    onClick={() => onOpenModal(product)}
+                    onClick={(e) => {
+                        e.stopPropagation();
+                        addToCart(product);
+                    }}
                 >
-                    Ver Detalhes
+                    Comprar
                 </button>
             </div>
         </div>
