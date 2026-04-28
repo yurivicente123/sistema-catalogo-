@@ -10,14 +10,18 @@ const AdminProductForm = ({ product, categories, onClose, onSuccess }) => {
     const [descricao, setDescricao] = useState(product?.descricao || '');
     const [compraMinima, setCompraMinima] = useState(product?.compra_minima || '1');
     const [prazoEntrega, setPrazoEntrega] = useState(product?.prazo_entrega || '');
-    const [imagem, setImagem] = useState(null);
-    const [preview, setPreview] = useState(product ? `${API_FILE_URL}${product.imagem}` : null);
+    const [imagens, setImagens] = useState([]);
+    const [previews, setPreviews] = useState(
+        product?.imagens?.length > 0 
+            ? product.imagens.map(img => img.startsWith('http') ? img : `${API_FILE_URL}${img}`) 
+            : (product?.imagem ? [`${API_FILE_URL}${product.imagem}`] : [])
+    );
 
     const handleImageChange = (e) => {
-        const file = e.target.files[0];
-        if (file) {
-            setImagem(file);
-            setPreview(URL.createObjectURL(file));
+        const files = Array.from(e.target.files);
+        if (files.length > 0) {
+            setImagens(files);
+            setPreviews(files.map(file => URL.createObjectURL(file)));
         }
     };
 
@@ -31,7 +35,11 @@ const AdminProductForm = ({ product, categories, onClose, onSuccess }) => {
         formData.append('descricao', descricao);
         formData.append('compra_minima', compraMinima);
         formData.append('prazo_entrega', prazoEntrega);
-        if (imagem) formData.append('imagem', imagem);
+        if (imagens.length > 0) {
+            imagens.forEach(img => {
+                formData.append('imagens', img);
+            });
+        }
 
         try {
             if (product) {
@@ -101,18 +109,18 @@ const AdminProductForm = ({ product, categories, onClose, onSuccess }) => {
                 </div>
 
                 <div style={{ marginBottom: '2rem' }}>
-                    <label style={{ display: 'block', marginBottom: '1rem', fontWeight: 600 }}>Imagem do Produto</label>
-                    <div style={{ display: 'flex', gap: '20px', alignItems: 'center' }}>
-                        {preview && (
-                            <img src={preview} alt="Preview" style={{ width: '100px', height: '100px', borderRadius: '12px', objectFit: 'cover', border: '3px solid #eee' }} />
-                        )}
-                        <div style={{ flex: 1 }}>
-                            <input type="file" onChange={handleImageChange} style={{ display: 'none' }} id="file-upload" required={!product} />
+                    <label style={{ display: 'block', marginBottom: '1rem', fontWeight: 600 }}>Imagens do Produto (Até 5 fotos)</label>
+                    <div style={{ display: 'flex', gap: '15px', alignItems: 'center', flexWrap: 'wrap' }}>
+                        {previews.map((prev, index) => (
+                            <img key={index} src={prev} alt={`Preview ${index}`} style={{ width: '80px', height: '80px', borderRadius: '12px', objectFit: 'cover', border: '2px solid #eee' }} />
+                        ))}
+                        <div style={{ flex: previews.length > 0 ? '0 1 auto' : '1' }}>
+                            <input type="file" multiple accept="image/*" onChange={handleImageChange} style={{ display: 'none' }} id="file-upload" required={!product} />
                             <label htmlFor="file-upload" style={{
-                                display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '10px', padding: '15px',
+                                display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '10px', padding: '15px 20px',
                                 background: '#f8f9fa', border: '2px dashed #ddd', borderRadius: '12px', cursor: 'pointer', fontWeight: 500
                             }}>
-                                <Upload size={20} /> {imagem ? imagem.name : 'Selecionar Imagem'}
+                                <Upload size={20} /> Selecionar Fotos
                             </label>
                         </div>
                     </div>

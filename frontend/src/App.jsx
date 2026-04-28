@@ -4,6 +4,7 @@ import { CartProvider } from './context/CartContext';
 import Navbar from './components/Navbar';
 import ProductCard from './components/ProductCard';
 import CartModal from './components/CartModal';
+import ProductModal from './components/ProductModal';
 import { getProducts, getSettings, API_FILE_URL } from './services/api';
 import { Search, ChevronDown } from 'lucide-react';
 
@@ -18,6 +19,7 @@ const HomePage = ({ settings }) => {
     const [products, setProducts] = useState([]);
     const [filteredProducts, setFilteredProducts] = useState([]);
     const [isCartOpen, setIsCartOpen] = useState(false);
+    const [selectedProduct, setSelectedProduct] = useState(null);
     const [categories, setCategories] = useState([]);
     const [activeCategory, setActiveCategory] = useState('Geral');
     const [search, setSearch] = useState('');
@@ -55,15 +57,15 @@ const HomePage = ({ settings }) => {
                         justifyContent: logoAlign === 'center' ? 'center' : 'flex-start',
                         margin: logoAlign === 'center' ? '0 auto 20px' : '0 0 20px'
                     }}>
-                        <div style={{ width: '80px', height: '80px', borderRadius: '50%', overflow: 'hidden' }}>
+                        <div style={{ width: '90px', height: '90px', borderRadius: '16px', overflow: 'hidden', background: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                             {settings.siteLogo ? (
                                 <img src={`${API_FILE_URL}${settings.siteLogo}`}
                                     alt="Logo"
                                     style={{
                                         width: '100%',
                                         height: '100%',
-                                        objectFit: 'cover',
-                                        objectPosition: `${settings.logoPosX || 50}% ${settings.logoPosY || 50}%`,
+                                        objectFit: 'contain',
+                                        objectPosition: 'center',
                                         transform: `scale(${(settings.logoZoom || 100) / 100})`
                                     }}
                                 />
@@ -112,7 +114,7 @@ const HomePage = ({ settings }) => {
                 <div className="product-grid">
                     {filteredProducts.length > 0 ? (
                         filteredProducts.map(product => (
-                            <ProductCard key={product.id} product={product} color={settings.primaryColor} />
+                            <ProductCard key={product.id} product={product} onOpenModal={setSelectedProduct} />
                         ))
                     ) : (
                         <div style={{ textAlign: 'center', gridColumn: '1/-1', padding: '100px 0' }}>
@@ -123,6 +125,7 @@ const HomePage = ({ settings }) => {
             </main>
 
             <CartModal isOpen={isCartOpen} onClose={() => setIsCartOpen(false)} settings={settings} />
+            <ProductModal product={selectedProduct} onClose={() => setSelectedProduct(null)} />
         </div>
     );
 };

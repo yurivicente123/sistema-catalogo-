@@ -2,9 +2,8 @@ import React from 'react';
 import { useCart } from '../context/CartContext';
 import { API_FILE_URL } from '../services/api';
 
-const ProductCard = ({ product }) => {
-    const { addToCart } = useCart();
-    const imageUrl = product.imagem.startsWith('http') ? product.imagem : `${API_FILE_URL}${product.imagem}`;
+const ProductCard = ({ product, onOpenModal }) => {
+    const imageUrl = product.imagem?.startsWith('http') ? product.imagem : (product.imagem ? `${API_FILE_URL}${product.imagem}` : 'https://via.placeholder.com/300x300?text=Produto');
 
     return (
         <div className="animate-fade" style={{ 
@@ -22,7 +21,7 @@ const ProductCard = ({ product }) => {
                 boxShadow: 'var(--shadow)',
                 marginBottom: '15px'
             }}>
-                <img src={imageUrl || 'https://via.placeholder.com/300x300?text=Produto'}
+                <img src={imageUrl}
                     alt={product.nome}
                     loading="lazy"
                     style={{
@@ -95,11 +94,11 @@ const ProductCard = ({ product }) => {
                         width: '100%', 
                         padding: '10px', 
                         fontSize: '0.85rem',
-                        marginTop: 'auto' /* Pushes button to bottom */
+                        marginTop: 'auto'
                     }}
-                    onClick={() => addToCart(product)}
+                    onClick={() => onOpenModal(product)}
                 >
-                    Comprar
+                    Ver Detalhes
                 </button>
             </div>
         </div>
